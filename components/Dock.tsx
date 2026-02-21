@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useState } from "react"
+import TrashWindow from "./TrashWindow"
 
 const dockItems = [
     { label: "Finder", icon: "/finderIcon.png", action: "finder", size: 64 },
@@ -16,6 +17,7 @@ const dockRightItems = [
 ]
 
 export default function Dock() {
+    const [openWindow, setOpenWindow] = useState<string | null>(null)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [hoveredRightIndex, setHoveredRightIndex] = useState<number | null>(null)
 
@@ -35,6 +37,7 @@ export default function Dock() {
             className="relative flex flex-col items-center cursor-pointer"
             onMouseEnter={() => setHovered(index)}
             onMouseLeave={() => setHovered(null)}
+            onClick={() => setOpenWindow(item.action)}
             style={{
                 transform: `scale(${getScale(index, hovered)})`,
                 transition: "transform 0.15s ease-out",
@@ -62,14 +65,21 @@ export default function Dock() {
     ))
 
     return (
-        <div className="fixed flex items-center gap-3 bottom-2 z-50 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/30 rounded-4xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] left-1/2 -translate-x-1/2">
-            
-            {renderItems(dockItems, hoveredIndex, setHoveredIndex)}
+        <>
+            <div className="fixed flex items-center gap-3 bottom-2 z-50 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/30 rounded-4xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] left-1/2 -translate-x-1/2">
 
-            <div className="w-px h-10 bg-white/30 mx-1" />
+                {renderItems(dockItems, hoveredIndex, setHoveredIndex)}
 
-            {renderItems(dockRightItems, hoveredRightIndex, setHoveredRightIndex)}
+                <div className="w-px h-10 bg-white/30 mx-1" />
 
-        </div>
+                {renderItems(dockRightItems, hoveredRightIndex, setHoveredRightIndex)}
+
+            </div>
+
+            <TrashWindow
+                isOpen={openWindow === "trash"}
+                onClose={() => setOpenWindow(null)}
+            />
+        </>
     )
 }
