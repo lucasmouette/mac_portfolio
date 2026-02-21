@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useCallback } from "react"
 import { FinderWindowProps } from "@/types/FinderWindowProps"
 import {
     LayoutGrid, List, Columns2, SquareStack,
@@ -49,23 +49,90 @@ const sidebarSections = [
 export default function FinderWindow({ title, isOpen, onClose, children }: FinderWindowProps) {
     const [searchValue, setSearchValue] = useState("")
 
+    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [size, setSize] = useState({ width: 900, height: 600 })
+
+    const isDragging = useRef(false)
+    const isResizing = useRef(false)
+    const dragStart = useRef({ x: 0, y: 0 })
+    const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 })
+
+    const onTitleBarMouseDown = useCallback((e: React.MouseEvent) => {
+        isDragging.current = true
+        dragStart.current = {
+            x: e.clientX - position.x,
+            y: e.clientY - position.y
+        }
+
+        const onMouseMove = (e: MouseEvent) => {
+            if (!isDragging.current) return
+            setPosition({
+                x: e.clientX - dragStart.current.x,
+                y: e.clientY - dragStart.current.y
+            })
+        }
+
+        const onMouseUp = () => {
+            isDragging.current = false
+            document.removeEventListener("mousemove", onMouseMove)
+            document.removeEventListener("mouseup", onMouseUp)
+        }
+
+        document.addEventListener("mousemove", onMouseMove)
+        document.addEventListener("mouseup", onMouseUp)
+    }, [position])
+
+    const onResizeMouseDown = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation()
+        isResizing.current = true
+        resizeStart.current = {
+            x: e.clientX,
+            y: e.clientY,
+            width: size.width,
+            height: size.height
+        }
+
+        const onMouseMove = (e: MouseEvent) => {
+            if (!isResizing.current) return
+            const newWidth = Math.max(600, resizeStart.current.width + e.clientX - resizeStart.current.x)
+            const newHeight = Math.max(400, resizeStart.current.height + e.clientY - resizeStart.current.y)
+            setSize({ width: newWidth, height: newHeight })
+        }
+
+        const onMouseUp = () => {
+            isResizing.current = false
+            document.removeEventListener("mousemove", onMouseMove)
+            document.removeEventListener("mouseup", onMouseUp)
+        }
+
+        document.addEventListener("mousemove", onMouseMove)
+        document.addEventListener("mouseup", onMouseUp)
+    }, [size])
+
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-30 flex items-center justify-center">
-            <div className="w-3/4 h-3/4 bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none">
+            <div
+                className="bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+                style={{
+                    width: size.width,
+                    height: size.height,
+                    transform: `translate(${position.x}px, ${position.y}px)`,
+                }}
+            >
 
-                {/* Title Bar */}
-                <div className="h-12 bg-gray-100/90 border-b border-gray-200/50 flex items-center px-4 gap-3">
+                <div
+                    className="h-12 bg-gray-100/90 border-b border-gray-200/50 flex items-center px-4 gap-3 cursor-grab active:cursor-grabbing select-none"
+                    onMouseDown={onTitleBarMouseDown}
+                >
 
-                    {/* Traffic lights */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2" onMouseDown={e => e.stopPropagation()}>
                         <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors" />
                         <button className="w-3 h-3 rounded-full bg-yellow-400 hover:bg-yellow-500 transition-colors" />
                         <button className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors" />
                     </div>
 
-                    {/* Back / Forward */}
                     <div className="flex items-center gap-1 ml-2">
                         <button className="p-1 rounded hover:bg-gray-200/70 text-gray-400 transition-colors">
                             <ChevronLeft size={16} />
@@ -75,7 +142,6 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                         </button>
                     </div>
 
-                    {/* View options */}
                     <div className="flex items-center border border-gray-200 rounded-md overflow-hidden ml-2">
                         {[LayoutGrid, List, Columns2, SquareStack].map((Icon, i) => (
                             <button key={i} className="p-1.5 hover:bg-gray-200/70 text-gray-500 transition-colors border-r border-gray-200 last:border-r-0">
@@ -84,7 +150,6 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                         ))}
                     </div>
 
-                    {/* Right side toolbar */}
                     <div className="flex items-center gap-2 ml-auto">
                         <button className="p-1.5 hover:bg-gray-200/70 rounded text-gray-500 transition-colors">
                             <Share size={14} />
@@ -95,8 +160,6 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                         <button className="p-1.5 hover:bg-gray-200/70 rounded text-gray-500 transition-colors">
                             <MoreHorizontal size={14} />
                         </button>
-
-                        {/* Search */}
                         <div className="flex items-center gap-1 bg-gray-200/70 rounded-md px-2 py-1">
                             <Search size={12} className="text-gray-400" />
                             <input
@@ -110,10 +173,8 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                     </div>
                 </div>
 
-                {/* Body */}
                 <div className="flex flex-1 overflow-hidden">
 
-                    {/* Sidebar */}
                     <div className="w-52 bg-gray-50/80 border-r border-gray-200/50 overflow-y-auto py-2 shrink-0">
                         {sidebarSections.map((section, i) => (
                             <div key={i} className="mb-3">
@@ -141,19 +202,18 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                         ))}
                     </div>
 
-                    {/* Content area */}
                     <div className="flex-1 flex flex-col overflow-hidden">
                         <div className="flex-1 p-4 overflow-auto">
                             {children}
                         </div>
 
-                        {/* Bottom bar */}
-                        <div className="h-7 bg-gray-100/80 border-t border-gray-200/50 flex items-center px-4">
-                            <span className="text-xs text-gray-500">{title}</span>
-                        </div>
                     </div>
-
                 </div>
+
+                <div
+                    className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize"
+                    onMouseDown={onResizeMouseDown}
+                />
             </div>
         </div>
     )
