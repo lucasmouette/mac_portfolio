@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useState } from "react"
-import TrashWindow from "./TrashWindow"
+import TrashWindow from "./Windows/TrashWindow"
 
 const dockItems = [
     { label: "Finder", icon: "/finderIcon.png", action: "finder", size: 64 },

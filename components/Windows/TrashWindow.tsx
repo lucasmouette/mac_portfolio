@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useState } from "react"
-import FinderWindow from "@/components/FinderWindow"
+import FinderWindow from "@/components/Windows/FinderWindow"
 import HireMeWindow from "./HireMeWindow"
 import { TrashWindowProps } from "@/types/TrashWindowProps"
 
