@@ -38,6 +38,7 @@ export default function Desktop() {
     const [topZIndex, setTopZIndex] = useState(30)
     const [windowZIndexes, setWindowZIndexes] = useState<Record<string, number>>({})
     const [openWindow, setOpenWindow] = useState<string | null>(null)
+    const [resumeSelected, setResumeSelected] = useState(false)
 
     const location = locations[currentLocation]
     if (!location) return null
@@ -167,14 +168,20 @@ export default function Desktop() {
             <div
                 className="fixed flex flex-col items-center gap-1 cursor-pointer group z-20"
                 style={{ top: "60px", left: "20px" }}
-                onClick={() => openFinder("resume")}
+                onClick={() => {
+                    setResumeSelected(true)
+                    setTimeout(() => setResumeSelected(false), 300)
+                    openFinder("resume")
+                }}
             >
-                <div className="w-16 h-16 relative">
-                    <Image src="/pdfIcon.png" alt="Resume" fill unoptimized className="object-contain" />
+                <div className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${resumeSelected ? "bg-white/30" : "hover:bg-white/20"}`}>
+                    <div className="w-16 h-16 relative">
+                        <Image src="/pdfIcon.png" alt="Resume" fill unoptimized className="object-contain" />
+                    </div>
+                    <span className="text-white text-xs text-center drop-shadow-md">
+                        Resume.pdf
+                    </span>
                 </div>
-                <span className="text-white text-xs text-center drop-shadow-md group-hover:underline">
-                    Resume.pdf
-                </span>
             </div>
 
             <MenuBar onItemClick={(action) => {
