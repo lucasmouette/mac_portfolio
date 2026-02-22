@@ -10,6 +10,7 @@ import AboutWindow from "./Windows/ImprintWindow"
 import FinderWindow from "./Windows/FinderWindow"
 import TrashWindow from "./Windows/TrashWindow"
 import ContactWindow from "./Windows/ContactWindow"
+import HireMeWindow from "./Windows/HireMeWindow"
 
 const locations: Record<string, { image: string; country: string; city: string }> = {
     paris: {
@@ -37,15 +38,18 @@ export default function Desktop() {
 
     /* ── Finder state ─────────────────────────────────────────── */
     const [finderOpen, setFinderOpen] = useState(false)
-    const [finderSection, setFinderSection] = useState("imprint")
+    const [finderSection, setFinderSection] = useState("projects")
     const [finderKey, setFinderKey] = useState(0)
 
     /* ── Z-index management ───────────────────────────────────── */
     const [topZIndex, setTopZIndex] = useState(30)
     const [windowZIndexes, setWindowZIndexes] = useState<Record<string, number>>({})
 
-    /* ── Open window tracking ─────────────────────────────────── */
-    const [openWindow, setOpenWindow] = useState<string | null>(null)
+    /* ── Open windows — Set allows multiple open at once ─────── */
+    const [openWindows, setOpenWindows] = useState<Set<string>>(new Set())
+
+    /* ── HireMe easter egg ────────────────────────────────────── */
+    const [hireMeOpen, setHireMeOpen] = useState(false)
 
     /* ── Desktop icon states ──────────────────────────────────── */
     const [resumeSelected, setResumeSelected] = useState(false)
@@ -80,6 +84,19 @@ export default function Desktop() {
         })
     }
 
+    const openWindow = (name: string) => {
+        setOpenWindows(prev => new Set(prev).add(name))
+        bringToFront(name)
+    }
+
+    const closeWindow = (name: string) => {
+        setOpenWindows(prev => {
+            const next = new Set(prev)
+            next.delete(name)
+            return next
+        })
+    }
+
     return (
         <div className="relative w-screen h-screen overflow-hidden">
 
@@ -97,8 +114,8 @@ export default function Desktop() {
                 <span
                     key={currentLocation}
                     className="text-white text-4xl font-semibold tracking-wide"
-                    style={{ 
-                        animation: "fadeIn 0.7s ease forwards", 
+                    style={{
+                        animation: "fadeIn 0.7s ease forwards",
                         fontFamily: "'BurnedPancakes', 'sans-serif'"
                     }}
                 >
@@ -219,43 +236,60 @@ export default function Desktop() {
             />
 
             {/* Dock */}
-            <Dock 
+            <Dock
                 onFinderOpen={() => openFinder("projects")}
+                onFinderOpenAtSection={(section) => openFinder(section)}
                 onBringToFront={bringToFront}
-                onOpenWindow={(name) => {
-                    setOpenWindow(name)
-                    bringToFront(name)
-                }}
+                onOpenWindow={openWindow}
             />
 
             {/* Sticky note */}
             <StickyNote />
 
             {/* Finder window */}
-            <FinderWindow
-                key={finderKey}
-                title="Finder"
-                isOpen={finderOpen}
-                onClose={() => setFinderOpen(false)}
-                initialSection={finderSection}
-                zIndex={windowZIndexes["finder"] || 30}
-            >
-                <AboutWindow />
-            </FinderWindow>
+            <div onMouseDown={() => bringToFront("finder")}>
+                <FinderWindow
+                    key={finderKey}
+                    title="Finder"
+                    isOpen={finderOpen}
+                    onClose={() => setFinderOpen(false)}
+                    initialSection={finderSection}
+                    zIndex={windowZIndexes["finder"] || 30}
+                >
+                    <AboutWindow />
+                </FinderWindow>
+            </div>
 
             {/* Trash window */}
-            <TrashWindow
-                isOpen={openWindow === "trash"}
-                onClose={() => setOpenWindow(null)}
-                zIndex={windowZIndexes["trash"] || 30}
-            />
+            <div onMouseDown={() => bringToFront("trash")}>
+                <TrashWindow
+                    isOpen={openWindows.has("trash")}
+                    onClose={() => closeWindow("trash")}
+                    zIndex={windowZIndexes["trash"] || 30}
+                    onHireMeOpen={() => {
+                        setHireMeOpen(true)
+                        bringToFront("hireme")
+                    }}
+                />
+            </div>
 
             {/* Contact window */}
-            <ContactWindow
-                isOpen={openWindow === "contact"}
-                onClose={() => setOpenWindow(null)}
-                zIndex={windowZIndexes["contact"] || 30}
-            />
+            <div onMouseDown={() => bringToFront("contact")}>
+                <ContactWindow
+                    isOpen={openWindows.has("contact")}
+                    onClose={() => closeWindow("contact")}
+                    zIndex={windowZIndexes["contact"] || 30}
+                />
+            </div>
+
+            {/* HireMe easter egg window */}
+            <div onMouseDown={() => bringToFront("hireme")}>
+                <HireMeWindow
+                    isOpen={hireMeOpen}
+                    onClose={() => setHireMeOpen(false)}
+                    zIndex={windowZIndexes["hireme"] || 30}
+                />
+            </div>
 
         </div>
     )

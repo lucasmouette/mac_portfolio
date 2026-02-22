@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useState, useRef, useCallback } from "react"
 import { TrashWindowProps } from "@/types/TrashWindowProps"
 
-export default function HireMeWindow({ isOpen, onClose }: TrashWindowProps) {
+export default function HireMeWindow({ isOpen, onClose, zIndex }: TrashWindowProps & { zIndex?: number }) {
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const isDragging = useRef(false)
     const dragStart = useRef({ x: 0, y: 0 })
@@ -15,7 +15,6 @@ export default function HireMeWindow({ isOpen, onClose }: TrashWindowProps) {
             x: e.clientX - position.x,
             y: e.clientY - position.y
         }
-
         const onMouseMove = (e: MouseEvent) => {
             if (!isDragging.current) return
             setPosition({
@@ -23,13 +22,11 @@ export default function HireMeWindow({ isOpen, onClose }: TrashWindowProps) {
                 y: e.clientY - dragStart.current.y
             })
         }
-
         const onMouseUp = () => {
             isDragging.current = false
             document.removeEventListener("mousemove", onMouseMove)
             document.removeEventListener("mouseup", onMouseUp)
         }
-
         document.addEventListener("mousemove", onMouseMove)
         document.addEventListener("mouseup", onMouseUp)
     }, [position])
@@ -37,11 +34,15 @@ export default function HireMeWindow({ isOpen, onClose }: TrashWindowProps) {
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+        <div
+            className="fixed inset-0 flex items-center justify-center pointer-events-none"
+            style={{ zIndex: zIndex || 50 }}
+        >
             <div
                 className="w-auto h-auto bg-white/80 backdrop-blur-xl border border-white/30 rounded-xl shadow-2xl overflow-hidden pointer-events-auto"
                 style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
             >
+                {/* Title bar */}
                 <div
                     className="relative h-10 bg-gray-100/90 border-b border-gray-200/50 flex items-center px-4 gap-2 cursor-grab active:cursor-grabbing select-none"
                     onMouseDown={onTitleBarMouseDown}
@@ -56,6 +57,7 @@ export default function HireMeWindow({ isOpen, onClose }: TrashWindowProps) {
                     </span>
                 </div>
 
+                {/* Content */}
                 <div className="p-8 flex flex-col items-center gap-6 text-center">
                     <Image
                         src="/dog.gif"

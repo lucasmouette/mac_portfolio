@@ -2,11 +2,10 @@
 
 import Image from "next/image"
 import { useState } from "react"
-import TrashWindow from "./Windows/TrashWindow"
-import ContactWindow from "./Windows/ContactWindow"
 
 interface DockProps {
     onFinderOpen: () => void
+    onFinderOpenAtSection: (section: string) => void
     onBringToFront: (name: string) => void
     onOpenWindow: (name: string) => void
 }
@@ -23,7 +22,7 @@ const dockRightItems = [
     { label: "Trash", icon: "/trashIcon.png", action: "trash", size: 64 },
 ]
 
-export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: DockProps) {
+export default function Dock({ onFinderOpen, onFinderOpenAtSection, onBringToFront, onOpenWindow }: DockProps) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [hoveredRightIndex, setHoveredRightIndex] = useState<number | null>(null)
 
@@ -50,6 +49,8 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
                     window.open("https://www.linkedin.com/in/lucas-mouette-65b7b6b3/", "_blank")
                 } else if (item.action === "files") {
                     onFinderOpen()
+                } else if (item.action === "hobbies") {
+                    onFinderOpenAtSection("hobbies")
                 } else {
                     onOpenWindow(item.action)
                     onBringToFront(item.action)
@@ -61,6 +62,7 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
                 transformOrigin: "bottom center"
             }}
         >
+            {/* Tooltip */}
             <span className={`
                 absolute -top-8 text-xs text-white bg-black/80 backdrop-blur-md border border-white/10 px-2 py-1 rounded-full whitespace-nowrap
                 transition-opacity duration-150
@@ -69,6 +71,7 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
                 {item.label}
             </span>
 
+            {/* Icon */}
             <div style={{ width: item.size, height: item.size }} className="relative">
                 <Image
                     src={item.icon}
@@ -82,16 +85,14 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
     ))
 
     return (
-        <>
-            <div className="fixed flex items-center gap-3 bottom-2 z-50 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/30 rounded-4xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] left-1/2 -translate-x-1/2">
+        <div className="fixed flex items-center gap-3 bottom-2 z-50 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/30 rounded-4xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] left-1/2 -translate-x-1/2">
 
-                {renderItems(dockItems, hoveredIndex, setHoveredIndex)}
+            {renderItems(dockItems, hoveredIndex, setHoveredIndex)}
 
-                <div className="w-px h-10 bg-white/30 mx-1" />
+            <div className="w-px h-10 bg-white/30 mx-1" />
 
-                {renderItems(dockRightItems, hoveredRightIndex, setHoveredRightIndex)}
+            {renderItems(dockRightItems, hoveredRightIndex, setHoveredRightIndex)}
 
-            </div>
-        </>
+        </div>
     )
 }
