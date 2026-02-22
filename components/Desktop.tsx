@@ -30,14 +30,24 @@ const locations: Record<string, { image: string; country: string; city: string }
 }
 
 export default function Desktop() {
+
+    /* ── Wallpaper state ──────────────────────────────────────── */
     const [currentLocation, setCurrentLocation] = useState("paris")
     const [isLeaving, setIsLeaving] = useState(false)
+
+    /* ── Finder state ─────────────────────────────────────────── */
     const [finderOpen, setFinderOpen] = useState(false)
     const [finderSection, setFinderSection] = useState("imprint")
     const [finderKey, setFinderKey] = useState(0)
+
+    /* ── Z-index management ───────────────────────────────────── */
     const [topZIndex, setTopZIndex] = useState(30)
     const [windowZIndexes, setWindowZIndexes] = useState<Record<string, number>>({})
+
+    /* ── Open window tracking ─────────────────────────────────── */
     const [openWindow, setOpenWindow] = useState<string | null>(null)
+
+    /* ── Desktop icon states ──────────────────────────────────── */
     const [resumeSelected, setResumeSelected] = useState(false)
 
     const location = locations[currentLocation]
@@ -73,13 +83,16 @@ export default function Desktop() {
     return (
         <div className="relative w-screen h-screen overflow-hidden">
 
+            {/* Wallpaper */}
             <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
                 style={{ backgroundImage: `url(${location.image})` }}
             />
 
+            {/* Dark overlay */}
             <div className="absolute inset-0 bg-black/20" />
 
+            {/* Location name */}
             <div className="absolute top-18 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10 pointer-events-none">
                 <span
                     key={currentLocation}
@@ -93,8 +106,10 @@ export default function Desktop() {
                 </span>
             </div>
 
-                {(currentLocation === "thoiry" || isLeaving) && (
+            {/* Thoiry easter egg — pixel character + iMessage bubble */}
+            {(currentLocation === "thoiry" || isLeaving) && (
                 <>
+                    {/* iMessage bubble */}
                     <div
                         className="fixed z-40"
                         style={{
@@ -110,6 +125,7 @@ export default function Desktop() {
                             <div className="bg-[#0B93F6] text-white text-sm px-4 py-3 rounded-[20px]">
                                 Psst... it&apos;s actually<br />near Geneva,<br />Switzerland 🇨🇭
                             </div>
+                            {/* Bubble tail */}
                             <div
                                 style={{
                                     position: "absolute",
@@ -125,7 +141,8 @@ export default function Desktop() {
                             />
                         </div>
                     </div>
-                            
+
+                    {/* Pixel character */}
                     <div
                         className="fixed z-40"
                         style={{
@@ -150,6 +167,7 @@ export default function Desktop() {
                 </>
             )}
 
+            {/* Animations */}
             <style>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(-6px); }
@@ -165,6 +183,7 @@ export default function Desktop() {
                 }
             `}</style>
 
+            {/* Desktop icon — Resume */}
             <div
                 className="fixed flex flex-col items-center gap-1 cursor-pointer group z-20"
                 style={{ top: "60px", left: "20px" }}
@@ -184,6 +203,7 @@ export default function Desktop() {
                 </div>
             </div>
 
+            {/* Menu bar */}
             <MenuBar onItemClick={(action) => {
                 if (action === "finder") openFinder("projects")
                 if (action === "imprint") openFinder("imprint")
@@ -192,11 +212,13 @@ export default function Desktop() {
                 if (action === "hobbies") openFinder("hobbies")
             }} />
 
+            {/* Wallpaper picker */}
             <WallpaperPicker
                 currentLocation={currentLocation}
                 onLocationChange={handleLocationChange}
             />
 
+            {/* Dock */}
             <Dock 
                 onFinderOpen={() => openFinder("projects")}
                 onBringToFront={bringToFront}
@@ -206,8 +228,10 @@ export default function Desktop() {
                 }}
             />
 
+            {/* Sticky note */}
             <StickyNote />
 
+            {/* Finder window */}
             <FinderWindow
                 key={finderKey}
                 title="Finder"
@@ -219,17 +243,20 @@ export default function Desktop() {
                 <AboutWindow />
             </FinderWindow>
 
+            {/* Trash window */}
             <TrashWindow
                 isOpen={openWindow === "trash"}
                 onClose={() => setOpenWindow(null)}
                 zIndex={windowZIndexes["trash"] || 30}
             />
 
+            {/* Contact window */}
             <ContactWindow
                 isOpen={openWindow === "contact"}
                 onClose={() => setOpenWindow(null)}
                 zIndex={windowZIndexes["contact"] || 30}
             />
+
         </div>
     )
 }

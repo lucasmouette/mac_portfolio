@@ -58,12 +58,14 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
         document.addEventListener("mouseup", onMouseUp)
     }, [position])
 
+    /* Copy value to clipboard, show checkmark for 2s */
     const handleCopy = (value: string, index: number) => {
         navigator.clipboard.writeText(value)
         setCopiedIndex(index)
         setTimeout(() => setCopiedIndex(null), 2000)
     }
 
+    /* Download contact info as .txt file */
     const handleDownloadPDF = () => {
         const content = `
             LUCAS MOUETTE
@@ -89,7 +91,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
 
     return (
         <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none"
-            style={{ zIndex: zIndex || 30 }}
+            style={{ zIndex: zIndex || 30 }}
         >
             <div
                 className="pointer-events-auto bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden"
@@ -110,7 +112,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                     </span>
                 </div>
 
-                {/* Card flip container */}
+                {/* Card flip container — click anywhere to flip */}
                 <div className="p-6">
                     <div
                         className="relative cursor-pointer"
@@ -132,7 +134,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                             }}
                         >
 
-                            {/* ===== FRONT ===== */}
+                            {/* Front — photo + name */}
                             <div
                                 style={{
                                     position: "absolute",
@@ -144,6 +146,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                             >
                                 <div className="w-full h-full bg-white rounded-3xl overflow-hidden flex flex-col shadow-xl">
 
+                                    {/* Photo area with geometric pattern */}
                                     <div className="relative flex-1 bg-gray-50 overflow-hidden">
                                         <svg className="absolute top-0 right-0 w-32 h-32 opacity-20" viewBox="0 0 120 120">
                                             <rect x="60" y="0" width="20" height="20" fill="#6366f1" />
@@ -166,6 +169,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                             <rect x="40" y="60" width="20" height="20" fill="#c7d2fe" />
                                         </svg>
 
+                                        {/* Logo badge */}
                                         <div className="absolute top-4 left-4 flex items-center gap-1.5">
                                             <div className="w-5 h-5 bg-indigo-500 rounded-sm flex items-center justify-center">
                                                 <span className="text-white text-xs font-bold">L</span>
@@ -173,6 +177,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                             <span className="text-indigo-500 text-xs font-semibold">Contact</span>
                                         </div>
 
+                                        {/* Profile photo */}
                                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-44 h-52">
                                             <Image
                                                 src="/lucas.png"
@@ -184,6 +189,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                         </div>
                                     </div>
 
+                                    {/* Name + email preview */}
                                     <div className="px-5 py-4 border-t border-gray-100">
                                         <div className="flex items-start justify-between">
                                             <div>
@@ -204,7 +210,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                 </div>
                             </div>
 
-                            {/* ===== BACK ===== */}
+                            {/* Back — contact details + download */}
                             <div
                                 style={{
                                     position: "absolute",
@@ -217,6 +223,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                             >
                                 <div className="w-full h-full bg-white rounded-3xl overflow-hidden flex flex-col shadow-xl">
 
+                                    {/* Header with geometric pattern */}
                                     <div className="relative flex-none h-40 bg-gray-50 overflow-hidden flex items-center justify-center">
                                         <svg className="absolute inset-0 w-full h-full opacity-15" viewBox="0 0 280 160">
                                             {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(col =>
@@ -234,6 +241,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                             )}
                                         </svg>
 
+                                        {/* Logo + name */}
                                         <div className="relative flex flex-col items-center gap-2">
                                             <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
                                                 <span className="text-white text-lg font-bold">L</span>
@@ -244,7 +252,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
 
                                     <div className="mx-5 border-t border-gray-200" />
 
-                                    {/* Contact details */}
+                                    {/* Contact items — email, LinkedIn, phone */}
                                     <div className="flex flex-col gap-4 px-5 py-5 flex-1 justify-center">
                                         {contactItems.map((item, index) => (
                                             <div key={item.label} className="flex items-center gap-3">
@@ -261,6 +269,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                                         {item.value}
                                                     </a>
                                                 </div>
+                                                {/* Copy to clipboard button */}
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation()
@@ -277,6 +286,7 @@ export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowPr
                                         ))}
                                     </div>
 
+                                    {/* Footer — download + flip back */}
                                     <div className="px-5 py-4 border-t border-gray-200 flex items-center justify-between">
                                         <button
                                             onClick={(e) => {

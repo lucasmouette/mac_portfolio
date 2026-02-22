@@ -15,6 +15,7 @@ export default function TrashWindow({ isOpen, onClose, zIndex }: TrashWindowProp
                 <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400 mb-2">2 items</p>
 
+                    {/* Old portfolio — opens in new tab */}
                     <div
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200/50 cursor-pointer transition-colors group"
                         onClick={() => window.open("https://lucasmouette.netlify.app/", "_blank")}
@@ -38,6 +39,7 @@ export default function TrashWindow({ isOpen, onClose, zIndex }: TrashWindowProp
                         </div>
                     </div>
 
+                    {/* open_me.gif — opens HireMe easter egg */}
                     <div
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200/50 cursor-pointer transition-colors group"
                         onClick={() => setHireMeOpen(true)}
@@ -63,6 +65,7 @@ export default function TrashWindow({ isOpen, onClose, zIndex }: TrashWindowProp
                 </div>
             </FinderWindow>
 
+            {/* Hire me easter egg window */}
             <HireMeWindow isOpen={hireMeOpen} onClose={() => setHireMeOpen(false)} />
         </>
     )

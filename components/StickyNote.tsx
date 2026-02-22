@@ -41,7 +41,7 @@ export default function StickyNote() {
                 transform: `translate(${position.x}px, ${position.y}px)`,
             }}
         >
-            {/* Sticky note */}
+            {/* Sticky note wrapper */}
             <div
                 className="bg-[#FFEF6B] shadow-lg"
                 style={{
@@ -59,7 +59,7 @@ export default function StickyNote() {
                     </span>
                 </div>
 
-                {/* Content */}
+                {/* Job list */}
                 <div className="px-3 py-3 flex flex-col gap-2">
                     {[
                         { emoji: "🎯", label: "UI / UX Developer" },
@@ -73,6 +73,7 @@ export default function StickyNote() {
                         </div>
                     ))}
 
+                    {/* Footer note */}
                     <div className="border-t border-[#E8D84A] mt-1 pt-2">
                         <p className="text-xs text-[#8B7500] italic">
                             Based in Munich, Germany 🇩🇪<br />Open to remote too!
