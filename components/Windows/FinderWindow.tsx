@@ -9,6 +9,8 @@ import {
     Cloud, HardDrive, User, FolderOpen, Heart
 } from "lucide-react"
 import ImprintWindow from "./ImprintWindow"
+import { downloadResume } from "@/utils/downloadResume"
+import NextImage from "next/image"
 
 const sidebarSections = [
     {
@@ -106,7 +108,31 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
         switch (activeSection) {
             case "imprint": return <ImprintWindow />
             case "projects": return <div className="p-4 text-gray-400 text-sm">Projects coming soon...</div>
-            case "resume": return <div className="p-4 text-gray-400 text-sm">Resume coming soon...</div>
+            case "resume": return (
+                <div className="p-4">
+                    <p className="text-xs text-gray-400 mb-4">1 item</p>
+                    <div
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors group"
+                        onDoubleClick={downloadResume}
+                    >
+                        <div className="w-12 h-12 relative shrink-0">
+                            <NextImage
+                                src="/pdfIcon.png"
+                                alt="Resume"
+                                fill
+                                unoptimized
+                                className="object-contain"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
+                                Lucas_Mouette_Resume.pdf
+                            </span>
+                            <span className="text-xs text-gray-400">Double-click to download</span>
+                        </div>
+                    </div>
+                </div>
+            )
             case "hobbies": return <div className="p-4 text-gray-400 text-sm">Hobbies coming soon...</div>
             default: return <div className="p-4 text-gray-400 text-sm">Select a section</div>
         }

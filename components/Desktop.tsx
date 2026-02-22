@@ -164,6 +164,19 @@ export default function Desktop() {
                 }
             `}</style>
 
+            <div
+                className="fixed flex flex-col items-center gap-1 cursor-pointer group z-20"
+                style={{ top: "60px", left: "20px" }}
+                onClick={() => openFinder("resume")}
+            >
+                <div className="w-16 h-16 relative">
+                    <Image src="/pdfIcon.png" alt="Resume" fill unoptimized className="object-contain" />
+                </div>
+                <span className="text-white text-xs text-center drop-shadow-md group-hover:underline">
+                    Resume.pdf
+                </span>
+            </div>
+
             <MenuBar onItemClick={(action) => {
                 if (action === "finder") openFinder("projects")
                 if (action === "imprint") openFinder("imprint")
@@ -176,6 +189,7 @@ export default function Desktop() {
                 currentLocation={currentLocation}
                 onLocationChange={handleLocationChange}
             />
+
             <Dock 
                 onFinderOpen={() => openFinder("projects")}
                 onBringToFront={bringToFront}
@@ -184,7 +198,9 @@ export default function Desktop() {
                     bringToFront(name)
                 }}
             />
+
             <StickyNote />
+
             <FinderWindow
                 key={finderKey}
                 title="Finder"
@@ -195,11 +211,13 @@ export default function Desktop() {
             >
                 <AboutWindow />
             </FinderWindow>
+
             <TrashWindow
                 isOpen={openWindow === "trash"}
                 onClose={() => setOpenWindow(null)}
                 zIndex={windowZIndexes["trash"] || 30}
             />
+
             <ContactWindow
                 isOpen={openWindow === "contact"}
                 onClose={() => setOpenWindow(null)}

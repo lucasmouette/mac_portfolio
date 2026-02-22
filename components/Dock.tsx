@@ -46,6 +46,8 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
             onClick={() => {
                 if (item.action === "finder") {
                     onFinderOpen()
+                } else if (item.action === "linkedin") {
+                    window.open("https://www.linkedin.com/in/lucas-mouette-65b7b6b3/", "_blank")
                 } else {
                     onOpenWindow(item.action)
                     onBringToFront(item.action)
