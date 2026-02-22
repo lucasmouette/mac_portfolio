@@ -11,7 +11,7 @@ interface MenuBarProps {
 const menuLeftItems = [
     { label: "Lucas Mouette", action: "home" },
     { label: "Resume", action: "resume" },
-    { label: "Portfolio", action: "portfolio" },
+    { label: "Projects", action: "portfolio" },
     { label: "Hobbies", action: "hobbies" },
     { label: "Imprint", action: "imprint" },
 ]

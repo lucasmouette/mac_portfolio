@@ -48,6 +48,8 @@ export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: Doc
                     onFinderOpen()
                 } else if (item.action === "linkedin") {
                     window.open("https://www.linkedin.com/in/lucas-mouette-65b7b6b3/", "_blank")
+                } else if (item.action === "files") {
+                    onFinderOpen()
                 } else {
                     onOpenWindow(item.action)
                     onBringToFront(item.action)

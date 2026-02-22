@@ -11,6 +11,8 @@ import {
 import ImprintWindow from "./ImprintWindow"
 import { downloadResume } from "@/utils/downloadResume"
 import NextImage from "next/image"
+import { projects } from "@/data/projects"
+import ProjectPreviewWindow from "./ProjectPreviewWindow"
 
 const sidebarSections = [
     {
@@ -52,6 +54,8 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
     const [activeSection, setActiveSection] = useState(initialSection || "imprint")
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const [size, setSize] = useState({ width: 900, height: 600 })
+    const [selectedProject, setSelectedProject] = useState<string | null>(null)
+    const selectedProjectData = projects.find(p => p.id === selectedProject) || null
 
     const isDragging = useRef(false)
     const isResizing = useRef(false)
@@ -107,7 +111,41 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
     const renderContent = () => {
         switch (activeSection) {
             case "imprint": return <ImprintWindow />
-            case "projects": return <div className="p-4 text-gray-400 text-sm">Projects coming soon...</div>
+            case "projects": return (
+                <>
+                    <div className="p-4">
+                        <p className="text-xs text-gray-400 mb-4">{projects.length} items</p>
+                        <div className="grid grid-cols-4 gap-4">
+                            {projects.map(project => (
+                                <div
+                                    key={project.id}
+                                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group"
+                                    onClick={() => setSelectedProject(project.id)}
+                                >
+                                    <div className="w-14 h-14 relative">
+                                        <NextImage
+                                            src="/folderIcon.png"
+                                            alt={project.name}
+                                            fill
+                                            unoptimized
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                    <span className="text-xs text-gray-700 text-center leading-tight group-hover:text-gray-900">
+                                        {project.name}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                        
+                    <ProjectPreviewWindow
+                        project={selectedProjectData}
+                        onClose={() => setSelectedProject(null)}
+                        zIndex={(zIndex || 30) + 1}
+                    />
+                </>
+            )
             case "resume": return (
                 <div className="p-4">
                     <p className="text-xs text-gray-400 mb-4">1 item</p>
