@@ -4,16 +4,19 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import { BsWifi, BsBatteryFull } from "react-icons/bs"
 
+interface MenuBarProps {
+    onItemClick: (action: string) => void
+}
+
 const menuLeftItems = [
     { label: "Lucas Mouette", action: "home" },
-    { label: "Finder", action: "finder" },
     { label: "Resume", action: "resume" },
     { label: "Portfolio", action: "portfolio" },
     { label: "Hobbies", action: "hobbies" },
-    { label: "About Me", action: "about" },
+    { label: "Imprint", action: "imprint" },
 ]
 
-export default function MenuBar(){
+export default function MenuBar({ onItemClick }: MenuBarProps){
 
     const [time, setTime] = useState<Date | null>(null)
 
@@ -29,7 +32,13 @@ export default function MenuBar(){
             <div className="flex items-center gap-4">
                 <Image src="/seagull.png" alt="CrzySeagull's Logo" width={20} height={20} className="rounded-full object-cover"/>
                 {menuLeftItems.map((item) => (
-                    <span className="text-sm text-black" key={item.label}>{item.label}</span>
+                    <span
+                        key={item.label}
+                        className="text-sm text-black cursor-pointer hover:opacity-70 transition-opacity"
+                        onClick={() => onItemClick(item.action)}
+                    >
+                        {item.label}
+                    </span>
                 ))}
             </div>
             <div className="flex items-center gap-3">

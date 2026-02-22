@@ -5,6 +5,12 @@ import { useState } from "react"
 import TrashWindow from "./Windows/TrashWindow"
 import ContactWindow from "./Windows/ContactWindow"
 
+interface DockProps {
+    onFinderOpen: () => void
+    onBringToFront: (name: string) => void
+    onOpenWindow: (name: string) => void
+}
+
 const dockItems = [
     { label: "Finder", icon: "/finderIcon.png", action: "finder", size: 64 },
     { label: "Hobbies", icon: "/hobbies.png", action: "hobbies", size: 53 },
@@ -17,8 +23,7 @@ const dockRightItems = [
     { label: "Trash", icon: "/trashIcon.png", action: "trash", size: 64 },
 ]
 
-export default function Dock() {
-    const [openWindow, setOpenWindow] = useState<string | null>(null)
+export default function Dock({ onFinderOpen, onBringToFront, onOpenWindow }: DockProps) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [hoveredRightIndex, setHoveredRightIndex] = useState<number | null>(null)
 
@@ -38,7 +43,14 @@ export default function Dock() {
             className="relative flex flex-col items-center cursor-pointer"
             onMouseEnter={() => setHovered(index)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => setOpenWindow(item.action)}
+            onClick={() => {
+                if (item.action === "finder") {
+                    onFinderOpen()
+                } else {
+                    onOpenWindow(item.action)
+                    onBringToFront(item.action)
+                }
+            }}
             style={{
                 transform: `scale(${getScale(index, hovered)})`,
                 transition: "transform 0.15s ease-out",
@@ -76,16 +88,6 @@ export default function Dock() {
                 {renderItems(dockRightItems, hoveredRightIndex, setHoveredRightIndex)}
 
             </div>
-
-            <TrashWindow
-                isOpen={openWindow === "trash"}
-                onClose={() => setOpenWindow(null)}
-            />
-
-            <ContactWindow
-                isOpen={openWindow === "contact"}
-                onClose={() => setOpenWindow(null)}
-            />
         </>
     )
 }

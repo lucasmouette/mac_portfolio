@@ -29,7 +29,7 @@ const contactItems = [
     },
 ]
 
-export default function ContactWindow({ isOpen, onClose }: TrashWindowProps) {
+export default function ContactWindow({ isOpen, onClose, zIndex }: TrashWindowProps & { zIndex?: number}) {
     const [isFlipped, setIsFlipped] = useState(false)
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
     const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -88,7 +88,9 @@ export default function ContactWindow({ isOpen, onClose }: TrashWindowProps) {
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none">
+        <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none"
+            style={{ zIndex: zIndex || 30 }}
+        >
             <div
                 className="pointer-events-auto bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden"
                 style={{ transform: `translate(${position.x}px, ${position.y}px)` }}

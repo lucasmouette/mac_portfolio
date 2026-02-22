@@ -6,12 +6,12 @@ import FinderWindow from "@/components/Windows/FinderWindow"
 import HireMeWindow from "./HireMeWindow"
 import { TrashWindowProps } from "@/types/TrashWindowProps"
 
-export default function TrashWindow({ isOpen, onClose }: TrashWindowProps) {
+export default function TrashWindow({ isOpen, onClose, zIndex }: TrashWindowProps & { zIndex?: number}) {
     const [hireMeOpen, setHireMeOpen] = useState(false)
 
     return (
         <>
-            <FinderWindow title="Bin" isOpen={isOpen} onClose={onClose}>
+            <FinderWindow title="Bin" isOpen={isOpen} onClose={onClose} simple zIndex={zIndex}>
                 <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400 mb-2">2 items</p>
 

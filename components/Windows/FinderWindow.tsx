@@ -5,26 +5,25 @@ import { FinderWindowProps } from "@/types/FinderWindowProps"
 import {
     LayoutGrid, List, Columns2, SquareStack,
     Share, Tag, MoreHorizontal, Search,
-    ChevronLeft, ChevronRight, Clock, Users,
-    FileText, Monitor, AppWindow, Image,
-    Download, Cloud, HardDrive
+    ChevronLeft, ChevronRight, FileText, Image, 
+    Cloud, HardDrive, User, FolderOpen, Heart
 } from "lucide-react"
+import ImprintWindow from "./ImprintWindow"
 
 const sidebarSections = [
     {
+        title: "Portfolio",
         items: [
-            { label: "Recents", icon: Clock },
-            { label: "Shared", icon: Users },
+            { label: "Projects", icon: FolderOpen },
+            { label: "Resume", icon: FileText },
+            { label: "Hobbies", icon: Heart },
+            { label: "Imprint", icon: User },
         ]
     },
     {
         title: "Favourites",
         items: [
-            { label: "Documents", icon: FileText },
-            { label: "Desktop", icon: Monitor },
-            { label: "Applications", icon: AppWindow },
             { label: "Pictures", icon: Image },
-            { label: "Downloads", icon: Download },
         ]
     },
     {
@@ -46,9 +45,9 @@ const sidebarSections = [
     },
 ]
 
-export default function FinderWindow({ title, isOpen, onClose, children }: FinderWindowProps) {
+export default function FinderWindow({ title, isOpen, onClose, children, simple, initialSection, zIndex }: FinderWindowProps & { simple?: boolean, initialSection?: string, zIndex?: number }) {
     const [searchValue, setSearchValue] = useState("")
-
+    const [activeSection, setActiveSection] = useState(initialSection || "imprint")
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const [size, setSize] = useState({ width: 900, height: 600 })
 
@@ -63,7 +62,6 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
             x: e.clientX - position.x,
             y: e.clientY - position.y
         }
-
         const onMouseMove = (e: MouseEvent) => {
             if (!isDragging.current) return
             setPosition({
@@ -71,13 +69,11 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                 y: e.clientY - dragStart.current.y
             })
         }
-
         const onMouseUp = () => {
             isDragging.current = false
             document.removeEventListener("mousemove", onMouseMove)
             document.removeEventListener("mouseup", onMouseUp)
         }
-
         document.addEventListener("mousemove", onMouseMove)
         document.addEventListener("mouseup", onMouseUp)
     }, [position])
@@ -91,42 +87,50 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
             width: size.width,
             height: size.height
         }
-
         const onMouseMove = (e: MouseEvent) => {
             if (!isResizing.current) return
             const newWidth = Math.max(600, resizeStart.current.width + e.clientX - resizeStart.current.x)
             const newHeight = Math.max(400, resizeStart.current.height + e.clientY - resizeStart.current.y)
             setSize({ width: newWidth, height: newHeight })
         }
-
         const onMouseUp = () => {
             isResizing.current = false
             document.removeEventListener("mousemove", onMouseMove)
             document.removeEventListener("mouseup", onMouseUp)
         }
-
         document.addEventListener("mousemove", onMouseMove)
         document.addEventListener("mouseup", onMouseUp)
     }, [size])
 
+    const renderContent = () => {
+        switch (activeSection) {
+            case "imprint": return <ImprintWindow />
+            case "projects": return <div className="p-4 text-gray-400 text-sm">Projects coming soon...</div>
+            case "resume": return <div className="p-4 text-gray-400 text-sm">Resume coming soon...</div>
+            case "hobbies": return <div className="p-4 text-gray-400 text-sm">Hobbies coming soon...</div>
+            default: return <div className="p-4 text-gray-400 text-sm">Select a section</div>
+        }
+    }
+
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none">
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none"
+            style={{ zIndex: zIndex || 30 }}
+        >
             <div
-                className="bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+                className="bg-white border border-gray-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
                 style={{
                     width: size.width,
                     height: size.height,
                     transform: `translate(${position.x}px, ${position.y}px)`,
                 }}
             >
-
+                {/* Title bar */}
                 <div
-                    className="h-12 bg-gray-100/90 border-b border-gray-200/50 flex items-center px-4 gap-3 cursor-grab active:cursor-grabbing select-none"
+                    className="h-12 bg-white border-b border-gray-200 flex items-center px-4 gap-3 cursor-grab active:cursor-grabbing select-none shrink-0"
                     onMouseDown={onTitleBarMouseDown}
                 >
-
                     <div className="flex items-center gap-2" onMouseDown={e => e.stopPropagation()}>
                         <button onClick={onClose} className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors" />
                         <button className="w-3 h-3 rounded-full bg-yellow-400 hover:bg-yellow-500 transition-colors" />
@@ -134,40 +138,44 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
                     </div>
 
                     <div className="flex items-center gap-1 ml-2">
-                        <button className="p-1 rounded hover:bg-gray-200/70 text-gray-400 transition-colors">
+                        <button className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
                             <ChevronLeft size={16} />
                         </button>
-                        <button className="p-1 rounded hover:bg-gray-200/70 text-gray-400 transition-colors">
+                        <button className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
                             <ChevronRight size={16} />
                         </button>
                     </div>
 
-                    <div className="flex items-center border border-gray-200 rounded-md overflow-hidden ml-2">
+                    <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden ml-2">
                         {[LayoutGrid, List, Columns2, SquareStack].map((Icon, i) => (
-                            <button key={i} className="p-1.5 hover:bg-gray-200/70 text-gray-500 transition-colors border-r border-gray-200 last:border-r-0">
+                            <button key={i} className="p-1.5 hover:bg-gray-100 text-gray-500 transition-colors border-r border-gray-200 last:border-r-0">
                                 <Icon size={14} />
                             </button>
                         ))}
                     </div>
 
+                    <span className="absolute left-1/2 -translate-x-1/2 text-xs text-gray-800 font-medium pointer-events-none">
+                        {title}
+                    </span>
+
                     <div className="flex items-center gap-2 ml-auto">
-                        <button className="p-1.5 hover:bg-gray-200/70 rounded text-gray-500 transition-colors">
+                        <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 transition-colors">
                             <Share size={14} />
                         </button>
-                        <button className="p-1.5 hover:bg-gray-200/70 rounded text-gray-500 transition-colors">
+                        <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 transition-colors">
                             <Tag size={14} />
                         </button>
-                        <button className="p-1.5 hover:bg-gray-200/70 rounded text-gray-500 transition-colors">
+                        <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 transition-colors">
                             <MoreHorizontal size={14} />
                         </button>
-                        <div className="flex items-center gap-1 bg-gray-200/70 rounded-md px-2 py-1">
+                        <div className="flex items-center gap-1 bg-gray-100 rounded-lg px-2 py-1">
                             <Search size={12} className="text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="Search"
                                 value={searchValue}
                                 onChange={(e) => setSearchValue(e.target.value)}
-                                className="bg-transparent text-xs text-gray-600 outline-none w-24 placeholder-gray-400"
+                                className="bg-transparent text-xs text-gray-700 outline-none w-24 placeholder-gray-400"
                             />
                         </div>
                     </div>
@@ -175,39 +183,46 @@ export default function FinderWindow({ title, isOpen, onClose, children }: Finde
 
                 <div className="flex flex-1 overflow-hidden">
 
-                    <div className="w-52 bg-gray-50/80 border-r border-gray-200/50 overflow-y-auto py-2 shrink-0">
-                        {sidebarSections.map((section, i) => (
-                            <div key={i} className="mb-3">
-                                {section.title && (
-                                    <p className="text-xs font-semibold text-gray-400 uppercase px-4 mb-1">
-                                        {section.title}
-                                    </p>
-                                )}
-                                {section.items.map((item) => (
-                                    <div
-                                        key={item.label}
-                                        className="flex items-center gap-2 px-3 py-1 hover:bg-gray-200/60 cursor-pointer rounded-md mx-1 transition-colors"
-                                    >
-                                        {'color' in item ? (
-                                            item.color
-                                                ? <div className={`w-3 h-3 rounded-full ${item.color}`} />
-                                                : <div className="w-3 h-3 rounded-full border border-gray-300" />
-                                        ) : item.icon ? (
-                                            <item.icon size={14} className="text-gray-500" />
-                                        ) : null}
-                                        <span className="text-sm text-gray-700">{item.label}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="flex-1 flex flex-col overflow-hidden">
-                        <div className="flex-1 p-4 overflow-auto">
-                            {children}
+                    {/* Sidebar — only shown when not simple */}
+                    {!simple && (
+                        <div className="w-52 bg-gray-50 border-r border-gray-200 overflow-y-auto py-2 shrink-0">
+                            {sidebarSections.map((section, i) => (
+                                <div key={i} className="mb-3">
+                                    {section.title && (
+                                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-1">
+                                            {section.title}
+                                        </p>
+                                    )}
+                                    {section.items.map((item) => (
+                                        <div
+                                            key={item.label}
+                                            onClick={() => setActiveSection(item.label.toLowerCase())}
+                                            className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer rounded-lg mx-1 transition-colors
+                                                ${activeSection === item.label.toLowerCase()
+                                                    ? "bg-indigo-50 text-indigo-600"
+                                                    : "hover:bg-gray-200/60 text-gray-700"
+                                                }`}
+                                        >
+                                            {'color' in item ? (
+                                                item.color
+                                                    ? <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                                                    : <div className="w-3 h-3 rounded-full border border-gray-300" />
+                                            ) : item.icon ? (
+                                                <item.icon size={14} className={activeSection === item.label.toLowerCase() ? "text-indigo-500" : "text-gray-500"} />
+                                            ) : null}
+                                            <span className="text-sm">{item.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
                         </div>
+                    )}
 
+                    {/* Content */}
+                    <div className="flex-1 overflow-auto bg-white p-4">
+                        {simple ? children : renderContent()}
                     </div>
+                
                 </div>
 
                 <div

@@ -6,6 +6,10 @@ import Dock from "./Dock"
 import MenuBar from "./MenuBar"
 import WallpaperPicker from "./WallpaperPicker"
 import StickyNote from "./StickyNote"
+import AboutWindow from "./Windows/ImprintWindow"
+import FinderWindow from "./Windows/FinderWindow"
+import TrashWindow from "./Windows/TrashWindow"
+import ContactWindow from "./Windows/ContactWindow"
 
 const locations: Record<string, { image: string; country: string; city: string }> = {
     paris: {
@@ -28,6 +32,12 @@ const locations: Record<string, { image: string; country: string; city: string }
 export default function Desktop() {
     const [currentLocation, setCurrentLocation] = useState("paris")
     const [isLeaving, setIsLeaving] = useState(false)
+    const [finderOpen, setFinderOpen] = useState(false)
+    const [finderSection, setFinderSection] = useState("imprint")
+    const [finderKey, setFinderKey] = useState(0)
+    const [topZIndex, setTopZIndex] = useState(30)
+    const [windowZIndexes, setWindowZIndexes] = useState<Record<string, number>>({})
+    const [openWindow, setOpenWindow] = useState<string | null>(null)
 
     const location = locations[currentLocation]
     if (!location) return null
@@ -42,6 +52,21 @@ export default function Desktop() {
         } else {
             setCurrentLocation(location)
         }
+    }
+
+    const openFinder = (section: string) => {
+        setFinderSection(section)
+        setFinderKey(k => k + 1)
+        setFinderOpen(true)
+        bringToFront("finder")
+    }
+
+    const bringToFront = (name: string) => {
+        setTopZIndex(z => {
+            const next = z + 1
+            setWindowZIndexes(prev => ({ ...prev, [name]: next }))
+            return next
+        })
     }
 
     return (
@@ -139,13 +164,47 @@ export default function Desktop() {
                 }
             `}</style>
 
-            <MenuBar />
+            <MenuBar onItemClick={(action) => {
+                if (action === "finder") openFinder("projects")
+                if (action === "imprint") openFinder("imprint")
+                if (action === "resume") openFinder("resume")
+                if (action === "portfolio") openFinder("projects")
+                if (action === "hobbies") openFinder("hobbies")
+            }} />
+
             <WallpaperPicker
                 currentLocation={currentLocation}
                 onLocationChange={handleLocationChange}
             />
-            <Dock />
+            <Dock 
+                onFinderOpen={() => openFinder("projects")}
+                onBringToFront={bringToFront}
+                onOpenWindow={(name) => {
+                    setOpenWindow(name)
+                    bringToFront(name)
+                }}
+            />
             <StickyNote />
+            <FinderWindow
+                key={finderKey}
+                title="Finder"
+                isOpen={finderOpen}
+                onClose={() => setFinderOpen(false)}
+                initialSection={finderSection}
+                zIndex={windowZIndexes["finder"] || 30}
+            >
+                <AboutWindow />
+            </FinderWindow>
+            <TrashWindow
+                isOpen={openWindow === "trash"}
+                onClose={() => setOpenWindow(null)}
+                zIndex={windowZIndexes["trash"] || 30}
+            />
+            <ContactWindow
+                isOpen={openWindow === "contact"}
+                onClose={() => setOpenWindow(null)}
+                zIndex={windowZIndexes["contact"] || 30}
+            />
         </div>
     )
 }
