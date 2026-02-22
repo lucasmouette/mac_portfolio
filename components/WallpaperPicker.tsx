@@ -19,8 +19,8 @@ export default function WallpaperPicker({ currentLocation, onLocationChange }: W
                         px-4 py-2 rounded-full text-sm font-medium text-left
                         backdrop-blur-md border transition-all duration-200
                         ${currentLocation === loc.id
-                            ? "bg-white/30 border-white/50 text-white shadow-lg"
-                            : "bg-white/10 border-white/20 text-white/70 hover:bg-white/20 hover:text-white"
+                            ? "bg-black/50 border-white/30 text-white shadow-lg"
+                            : "bg-black/30 border-white/20 text-white hover:bg-black/50"
                         }
                     `}
                 >

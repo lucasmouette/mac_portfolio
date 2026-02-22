@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import TrashWindow from "./Windows/TrashWindow"
+import ContactWindow from "./Windows/ContactWindow"
 
 const dockItems = [
     { label: "Finder", icon: "/finderIcon.png", action: "finder", size: 64 },
@@ -45,7 +46,7 @@ export default function Dock() {
             }}
         >
             <span className={`
-                absolute -top-8 text-xs text-white bg-black/50 px-2 py-0.5 rounded-md whitespace-nowrap
+                absolute -top-8 text-xs text-white bg-black/80 backdrop-blur-md border border-white/10 px-2 py-1 rounded-full whitespace-nowrap
                 transition-opacity duration-150
                 ${hovered === index ? "opacity-100" : "opacity-0"}
             `}>
@@ -78,6 +79,11 @@ export default function Dock() {
 
             <TrashWindow
                 isOpen={openWindow === "trash"}
+                onClose={() => setOpenWindow(null)}
+            />
+
+            <ContactWindow
+                isOpen={openWindow === "contact"}
                 onClose={() => setOpenWindow(null)}
             />
         </>
