@@ -5,7 +5,7 @@ import { WallpaperPickerProps } from "@/types/WallpaperPickerProps"
 const locations = [
     { id: "paris", label: "Where I was born 🗼", country: "Paris, France" },
     { id: "thoiry", label: "Where I grew up 🏔️", country: "Pays de Gex, France" },
-    { id: "munich", label: "Where I live 🍺", country: "Munich, Germany" },
+    { id: "munich", label: "Where I live now 🍺", country: "Munich, Germany" },
 ]
 
 export default function WallpaperPicker({ currentLocation, onLocationChange }: WallpaperPickerProps) {
