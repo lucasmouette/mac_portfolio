@@ -11,9 +11,16 @@ import {
 import ImprintWindow from "./ImprintWindow"
 import { downloadResume } from "@/utils/downloadResume"
 import NextImage from "next/image"
-import { projects } from "@/data/projects"
-import ProjectPreviewWindow from "./ProjectPreviewWindow"
-import HobbiesWindow from "./HobbiesWindow"
+import { projects, Project } from "@/data/projects"
+
+const hobbies = [
+    { emoji: "🎿", label: "Skiing / Snowboarding", description: "Carving down slopes in the Alps whenever possible" },
+    { emoji: "📸", label: "Photography", description: "Both analog and digital — capturing every moment" },
+    { emoji: "🏃", label: "Fitness", description: "Keeping active and pushing limits every day" },
+    { emoji: "🎮", label: "Gaming", description: "Unwinding after a long day with a good game" },
+    { emoji: "✈️", label: "Travel", description: "Paris, Munich, Switzerland... always on the move" },
+    { emoji: "🎵", label: "Vinyl Digging", description: "Hunting for new records every weekend" },
+]
 
 const sidebarSections = [
     {
@@ -50,13 +57,17 @@ const sidebarSections = [
     },
 ]
 
-export default function FinderWindow({ title, isOpen, onClose, children, simple, initialSection, zIndex }: FinderWindowProps & { simple?: boolean, initialSection?: string, zIndex?: number }) {
+export default function FinderWindow({ title, isOpen, onClose, children, simple, initialSection, zIndex , onProjectSelect }: FinderWindowProps & {     
+    simple?: boolean, 
+    initialSection?: string, 
+    zIndex?: number,
+    onProjectSelect?: (id: string | null) => void,
+    selectedProject?: Project | null 
+}) {
     const [searchValue, setSearchValue] = useState("")
     const [activeSection, setActiveSection] = useState(initialSection || "imprint")
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const [size, setSize] = useState({ width: 900, height: 600 })
-    const [selectedProject, setSelectedProject] = useState<string | null>(null)
-    const selectedProjectData = projects.find(p => p.id === selectedProject) || null
 
     const isDragging = useRef(false)
     const isResizing = useRef(false)
@@ -123,7 +134,7 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
                                 <div
                                     key={project.id}
                                     className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors group"
-                                    onClick={() => setSelectedProject(project.id)}
+                                    onClick={() => onProjectSelect?.(project.id)}
                                 >
                                     <div className="w-14 h-14 relative">
                                         <NextImage
@@ -135,19 +146,12 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
                                         />
                                     </div>
                                     <span className="text-xs text-gray-700 text-center leading-tight group-hover:text-gray-900">
-                                        {project.name}
+                                        {project.shortName}
                                     </span>
                                 </div>
                             ))}
                         </div>
                     </div>
-
-                    {/* Project preview popup */}
-                    <ProjectPreviewWindow
-                        project={selectedProjectData}
-                        onClose={() => setSelectedProject(null)}
-                        zIndex={(zIndex || 30) + 1}
-                    />
                 </>
             )
 
@@ -179,11 +183,22 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
             )
 
             case "hobbies": return (
-                <div className="p-4 flex flex-col items-center justify-center h-full gap-3">
-                    <span className="text-4xl">🎮</span>
-                    <p className="text-sm text-gray-500">Click Hobbies in the sidebar to launch the game</p>
+                <div className="p-6 flex flex-col gap-4">
+                    <p className="text-xs text-gray-400">{hobbies.length} items</p>
+                    <div className="flex flex-col gap-2">
+                        {hobbies.map((hobby) => (
+                            <div key={hobby.label} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                                <span className="text-2xl">{hobby.emoji}</span>
+                                <div>
+                                    <p className="text-sm font-medium text-gray-800">{hobby.label}</p>
+                                    <p className="text-xs text-gray-400">{hobby.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )
+
             default: return <div className="p-4 text-gray-400 text-sm">Select a section</div>
         }
     }

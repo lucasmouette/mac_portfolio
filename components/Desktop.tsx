@@ -12,6 +12,8 @@ import TrashWindow from "./Windows/TrashWindow"
 import ContactWindow from "./Windows/ContactWindow"
 import HireMeWindow from "./Windows/HireMeWindow"
 import WordleWindow from "./Windows/WordleWindow"
+import ProjectPreviewWindow from "./Windows/ProjectPreviewWindow"
+import { projects } from "@/data/projects"
 
 const locations: Record<string, { image: string; country: string; city: string }> = {
     paris: {
@@ -56,6 +58,9 @@ export default function Desktop() {
     const [resumeSelected, setResumeSelected] = useState(false)
 
     const [wordleOpen, setWordleOpen] = useState(false)
+
+    const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
+    const selectedProject = projects.find(p => p.id === selectedProjectId) || null
 
     const location = locations[currentLocation]
     if (!location) return null
@@ -223,6 +228,22 @@ export default function Desktop() {
                 </div>
             </div>
 
+            {/* Desktop icon — Projects/Files */}
+            <div
+                className="fixed flex flex-col items-center gap-1 cursor-pointer group z-20"
+                style={{ top: "160px", left: "20px" }}
+                onClick={() => openFinder("projects")}
+            >
+                <div className="flex flex-col items-center gap-1 p-2 rounded-xl transition-colors hover:bg-white/20">
+                    <div className="w-16 h-16 relative">
+                        <Image src="/folderIcon.png" alt="Projects" fill unoptimized className="object-contain" />
+                    </div>
+                    <span className="text-white text-xs text-center drop-shadow-md">
+                        Projects
+                    </span>
+                </div>
+            </div>
+
             {/* Menu bar */}
             <MenuBar onItemClick={(action) => {
                 if (action === "finder") openFinder("projects")
@@ -268,6 +289,10 @@ export default function Desktop() {
                     onClose={() => setFinderOpen(false)}
                     initialSection={finderSection}
                     zIndex={windowZIndexes["finder"] || 30}
+                    onProjectSelect={(id) => {
+                        setSelectedProjectId(id)
+                        if (id) bringToFront("project-preview")
+                    }}
                 >
                     <AboutWindow />
                 </FinderWindow>
@@ -309,6 +334,14 @@ export default function Desktop() {
                     isOpen={hireMeOpen}
                     onClose={() => setHireMeOpen(false)}
                     zIndex={windowZIndexes["hireme"] || 30}
+                />
+            </div>
+
+            <div onMouseDown={() => bringToFront("project-preview")}>
+                <ProjectPreviewWindow
+                    project={selectedProject}
+                    onClose={() => setSelectedProjectId(null)}
+                    zIndex={windowZIndexes["project-preview"] || 50}
                 />
             </div>
 

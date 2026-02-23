@@ -73,10 +73,6 @@ export default function ProjectPreviewWindow({ project, onClose, zIndex }: Proje
                         unoptimized
                         className="object-cover"
                     />
-                    {/* Placeholder overlay if no real screenshot */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
-                        <p className="text-indigo-300 text-sm font-medium">📸 Screenshot coming soon</p>
-                    </div>
                 </div>
 
                 {/* Content */}
@@ -89,7 +85,10 @@ export default function ProjectPreviewWindow({ project, onClose, zIndex }: Proje
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed">{project.description}</p>
+                    <div
+                        className="text-gray-600 text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: project.description }}
+                    />
 
                     {/* Tech stack */}
                     <div>
@@ -107,16 +106,18 @@ export default function ProjectPreviewWindow({ project, onClose, zIndex }: Proje
                     </div>
 
                     {/* View project button */}
-                    <div className="pt-2 border-t border-gray-100">
-                        <a
-                            href={project.figmaLink}
-                            target="_blank"
-                            className="flex items-center justify-center gap-2 w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-xl transition-colors"
-                        >
-                            <ExternalLink size={14} />
-                            View in Figma
-                        </a>
-                    </div>
+                    {project.figmaLink && (
+                        <div className="pt-2 border-t border-gray-100">
+                            <a
+                                href={project.figmaLink}
+                                target="_blank"
+                                className="flex items-center justify-center gap-2 w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-xl transition-colors"
+                            >
+                                <ExternalLink size={14} />
+                                View in Figma
+                            </a>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
