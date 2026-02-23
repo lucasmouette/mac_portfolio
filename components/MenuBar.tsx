@@ -36,7 +36,7 @@ export default function MenuBar({ onItemClick }: MenuBarProps){
                 {menuLeftItems.map((item) => (
                     <span
                         key={item.label}
-                        className="text-sm text-black cursor-pointer hover:opacity-70 transition-opacity"
+                        className="text-sm text-black pt-0.5 cursor-pointer hover:opacity-70 transition-opacity"
                         onClick={() => onItemClick(item.action)}
                     >
                         {item.label}
@@ -45,7 +45,7 @@ export default function MenuBar({ onItemClick }: MenuBarProps){
             </div>
 
             {/* Right — Battery, WiFi, Date & Time */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 pt-0.5">
                 <BsBatteryFull size={16} className="text-black" />
                 <BsWifi size={16} className="text-black" />
                 <span className="text-sm text-black">{time?.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" })}</span>
