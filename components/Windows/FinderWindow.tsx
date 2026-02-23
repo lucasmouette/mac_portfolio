@@ -13,6 +13,7 @@ import { downloadResume } from "@/utils/downloadResume"
 import NextImage from "next/image"
 import { projects } from "@/data/projects"
 import ProjectPreviewWindow from "./ProjectPreviewWindow"
+import HobbiesWindow from "./HobbiesWindow"
 
 const sidebarSections = [
     {
@@ -177,7 +178,12 @@ export default function FinderWindow({ title, isOpen, onClose, children, simple,
                 </div>
             )
 
-            case "hobbies": return <div className="p-4 text-gray-400 text-sm">Hobbies coming soon...</div>
+            case "hobbies": return (
+                <div className="p-4 flex flex-col items-center justify-center h-full gap-3">
+                    <span className="text-4xl">🎮</span>
+                    <p className="text-sm text-gray-500">Click Hobbies in the sidebar to launch the game</p>
+                </div>
+            )
             default: return <div className="p-4 text-gray-400 text-sm">Select a section</div>
         }
     }

@@ -11,6 +11,7 @@ import FinderWindow from "./Windows/FinderWindow"
 import TrashWindow from "./Windows/TrashWindow"
 import ContactWindow from "./Windows/ContactWindow"
 import HireMeWindow from "./Windows/HireMeWindow"
+import WordleWindow from "./Windows/WordleWindow"
 
 const locations: Record<string, { image: string; country: string; city: string }> = {
     paris: {
@@ -53,6 +54,8 @@ export default function Desktop() {
 
     /* ── Desktop icon states ──────────────────────────────────── */
     const [resumeSelected, setResumeSelected] = useState(false)
+
+    const [wordleOpen, setWordleOpen] = useState(false)
 
     const location = locations[currentLocation]
     if (!location) return null
@@ -226,7 +229,10 @@ export default function Desktop() {
                 if (action === "imprint") openFinder("imprint")
                 if (action === "resume") openFinder("resume")
                 if (action === "portfolio") openFinder("projects")
-                if (action === "hobbies") openFinder("hobbies")
+                if (action === "hobbies") {
+                    setWordleOpen(true)
+                    bringToFront("wordle")
+                }
             }} />
 
             {/* Wallpaper picker */}
@@ -238,7 +244,14 @@ export default function Desktop() {
             {/* Dock */}
             <Dock
                 onFinderOpen={() => openFinder("projects")}
-                onFinderOpenAtSection={(section) => openFinder(section)}
+                onFinderOpenAtSection={(section) => {
+                    if (section === "hobbies") {
+                        setWordleOpen(true)
+                        bringToFront("wordle")
+                    } else {
+                        openFinder(section)
+                    }
+                }}
                 onBringToFront={bringToFront}
                 onOpenWindow={openWindow}
             />
@@ -279,6 +292,14 @@ export default function Desktop() {
                     isOpen={openWindows.has("contact")}
                     onClose={() => closeWindow("contact")}
                     zIndex={windowZIndexes["contact"] || 30}
+                />
+            </div>
+
+            <div onMouseDown={() => bringToFront("wordle")}>
+                <WordleWindow
+                    isOpen={wordleOpen}
+                    onClose={() => setWordleOpen(false)}
+                    zIndex={windowZIndexes["wordle"] || 40}
                 />
             </div>
 
