@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react"
 
 export default function StickyNote() {
-    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [position, setPosition] = useState({ x: -1200, y: 0 })
     const isDragging = useRef(false)
     const dragStart = useRef({ x: 0, y: 0 })
 

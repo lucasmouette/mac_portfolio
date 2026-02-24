@@ -13,9 +13,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lucas Mouette",
-  description: "Portfolio Website",
-};
+  title: "Lucas Mouette — UI/UX & Frontend Portfolio",
+  description: "Computer Science & Design student based in Munich. Seeking roles in UI/UX Design, Frontend Development, and Product Management.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "Lucas Mouette — UI/UX & Frontend Portfolio",
+    description: "Computer Science & Design student based in Munich. Seeking roles in UI/UX Design, Frontend Development, and Product Management.",
+    url: "https://lucasmouette.com",
+    siteName: "Lucas Mouette Portfolio",
+    images: [
+      {
+        url: "/lucas.png",
+        width: 1200,
+        height: 630,
+        alt: "Lucas Mouette — UI/UX & Frontend Portfolio",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+}
 
 export default function RootLayout({
   children,

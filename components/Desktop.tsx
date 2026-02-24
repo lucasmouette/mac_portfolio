@@ -14,6 +14,7 @@ import HireMeWindow from "./Windows/HireMeWindow"
 import WordleWindow from "./Windows/WordleWindow"
 import ProjectPreviewWindow from "./Windows/ProjectPreviewWindow"
 import { projects } from "@/data/projects"
+import HelpWindow from "./Windows/HelpWindow"
 
 const locations: Record<string, { image: string; country: string; city: string }> = {
     paris: {
@@ -61,6 +62,8 @@ export default function Desktop() {
 
     const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
     const selectedProject = projects.find(p => p.id === selectedProjectId) || null
+
+    const [helpOpen, setHelpOpen] = useState(true)
 
     const location = locations[currentLocation]
     if (!location) return null
@@ -344,6 +347,15 @@ export default function Desktop() {
                     zIndex={windowZIndexes["project-preview"] || 50}
                 />
             </div>
+
+            {helpOpen && (
+                <div onMouseDown={() => bringToFront("help")}>
+                    <HelpWindow
+                        onClose={() => setHelpOpen(false)}
+                        zIndex={windowZIndexes["help"] || 60}
+                    />
+                </div>
+            )}
 
         </div>
     )
