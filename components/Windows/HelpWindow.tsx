@@ -13,7 +13,7 @@ const steps = [
     { icon: "📁", title: "Browse my projects", text: "Click the Finder icon or the Projects folder on the desktop to see all my work. Click a project to open a preview." },
     { icon: "🗑️", title: "Check the Trash", text: "There might be something worth finding in the trash... give it a click 👀" },
     { icon: "🎮", title: "Play a game", text: "Click the Hobbies icon in the dock to launch a Wordle-style game — guess my hobbies letter by letter!" },
-    { icon: "🌍", title: "Change the wallpaper", text: "See the location pill at the bottom right?. Explore mylife through these wallpapers." },
+    { icon: "🌍", title: "Change the wallpaper", text: "See the location pills at the bottom right?. Explore mylife through these wallpapers." },
     { icon: "📄", title: "Download my resume", text: "The PDF icon on the top left of the desktop opens my resume directly. Double-click the file to download it." },
 ]
 
