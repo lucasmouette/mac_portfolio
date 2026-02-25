@@ -54,7 +54,7 @@ export const projects: Project[] = [
         role: "Brand Designer, UI/UX Designer, Graphic Designer",
         techStack: ["Figma", "Adobe Creative Cloud"],
         figmaLink: "https://www.figma.com/design/VFUBPWmFfy3QbovJq5EerK/Projects---Work---Lucas-Mouette?node-id=4-163307",
-        screenshot: "/projects/ikea.png"
+        screenshot: "/projects/Ikea.png"
     },
     {
         id: "project-4",
