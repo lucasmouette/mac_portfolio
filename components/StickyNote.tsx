@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react"
 
 export default function StickyNote() {
-    const [position, setPosition] = useState({ x: -1200, y: 0 })
+    const [position, setPosition] = useState({ x: 0, y: 0 })
     const isDragging = useRef(false)
     const dragStart = useRef({ x: 0, y: 0 })
 
@@ -36,8 +36,8 @@ export default function StickyNote() {
         <div
             className="fixed z-20 w-56"
             style={{
-                top: "60px",
-                right: "20px",
+                top: "270px",
+                left: "20px",
                 transform: `translate(${position.x}px, ${position.y}px)`,
             }}
         >
