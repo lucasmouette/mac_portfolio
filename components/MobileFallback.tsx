@@ -29,7 +29,7 @@ export default function MobileFallback() {
             <div className="fixed top-0 left-0 right-0 z-50 bg-white px-5 pt-10 pb-3 flex items-center justify-between border-b border-gray-100">
                 <div>
                     <p className="text-xs text-gray-400 uppercase tracking-widest mb-0.5">Portfolio</p>
-                    <h1 className="text-xl font-black text-black tracking-tight">Pick Me! 🙋</h1>
+                    <h1 className="text-xl font-black text-black tracking-tight">Choose Me! 🙋</h1>
                 </div>
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
