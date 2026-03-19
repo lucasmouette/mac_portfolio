@@ -62,7 +62,7 @@ export default function StickyNote() {
                 {/* Job list */}
                 <div className="px-3 py-3 flex flex-col gap-2">
                     {[
-                        { emoji: "🎯", label: "UI / UX Developer" },
+                        { emoji: "🎯", label: "UI / UX Designer" },
                         { emoji: "🎯", label: "Product Management" },
                         { emoji: "🎯", label: "Frontend Developer" },
                         { emoji: "🎯", label: "Junior Developer" },

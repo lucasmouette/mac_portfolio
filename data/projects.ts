@@ -86,4 +86,21 @@ export const projects: Project[] = [
         figmaLink: "https://www.figma.com/design/VFUBPWmFfy3QbovJq5EerK/Projects---Work---Lucas-Mouette?node-id=3-44522",
         screenshot: "/projects/ggt.svg"
     },
+    {
+        id: "project-6",
+        name: "MOIA - Museum of Interactive Art",
+        shortName: "MOIA",
+        description: `MOIA (Museum of Interactive Art) is a physical and digital installation that explores how artificial intelligence can connect people rather than replace them. 
+                        Built as part of the AI Project Module at Hochschule München (SoSe 2025), the installation invites visitors to collaboratively create art in real time using computer vision and AI.<br /><br />
+                        <ul class="list-disc pl-6">
+                            <li><strong>Interactive installation:</strong> Two platforms, one projection wall — visitors interact with the system to generate unique, AI-driven visuals in real time.</li>
+                            <li><strong>Computer vision & AI:</strong> Uses webcams and TouchDesigner to capture user movement and translate it into generative artwork.</li>
+                            <li><strong>From prototype to exhibition:</strong> Started with a MacBook and two iPhones, scaled up to a full physical installation built by hand — including the wall, platforms, and cabling.</li>
+                            <li><strong>Web presence:</strong> Designed and built the accompanying website to document the concept, technology, and artworks.</li>
+                        </ul>`,
+        role: "UI/UX Designer, Web Developer, Interaction Designer",
+        techStack: ["TouchDesigner", "Computer Vision", "Next.js", "Figma", "Cloudflare Workers"],
+        figmaLink: "https://web.moia.workers.dev/",
+        screenshot: "/projects/moia.png"
+    },
 ]

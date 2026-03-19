@@ -114,7 +114,7 @@ export default function ProjectPreviewWindow({ project, onClose, zIndex }: Proje
                                 className="flex items-center justify-center gap-2 w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-xl transition-colors"
                             >
                                 <ExternalLink size={14} />
-                                View in Figma
+                                View Project
                             </a>
                         </div>
                     )}
